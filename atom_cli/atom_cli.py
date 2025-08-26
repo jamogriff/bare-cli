@@ -39,7 +39,8 @@ class AtomCLI:
         else:
             default = "no"
 
-        print(f"{prompt} (yes/no) [{Fore.YELLOW + default + Fore.RESET}]:")
+        displayed_default = self._get_atom_bracket_value(Fore.YELLOW, default)
+        print(f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}:")
         response = input("> ")
 
         if response == "":
@@ -53,23 +54,23 @@ class AtomCLI:
         valid_inputs = [i for i in range(0, len(choices))]
         print(prompt)
         for i, choice in enumerate(choices):
-            i_option = "[" + str(i) + "]"
-            print(f"{i_option:>5} {choice}")
+            self._display_left_padded_color_choice(i, choice)
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
         print(prompt)
         id_input = input("> ")
+        int_input = self._try_parse_int(id_input)
 
         # If chances not allowed, raise exception immediately
-        if not allow_chances and int(id_input) not in valid_inputs:
+        if not allow_chances and int_input not in valid_inputs:
             self.error("Please try again later.")
             raise InvalidChoiceError()
 
         # If chances allowed, give user multiple chances to make a selection
-        if allow_chances and int(id_input) not in valid_inputs:
+        if allow_chances and int_input not in valid_inputs:
             chances = 1
             chance_limit = 3
-            while int(id_input) not in valid_inputs:
+            while int_input not in valid_inputs:
                 if chances == chance_limit - 1:
                     self.warning("Please stop faffing about.")
                 elif chances >= chance_limit:
@@ -77,10 +78,11 @@ class AtomCLI:
                     raise InvalidChoiceError()
 
                 print(prompt)
-                id_input = input("> ")
+                id_input = input("> ").strip()
+                int_input = self._try_parse_int(id_input)
                 chances += 1
 
-        return choices[int(id_input)]
+        return choices[int_input]
 
     def _display_right_padded_color_label(self, label: str, colorama_fore_color: str, message: str):
         """Display a right-padded colored label and a message.
@@ -89,8 +91,34 @@ class AtomCLI:
         So we format the intended label first and then replace it with the colored version.
         """
 
-        colored_label = "[" + colorama_fore_color + label + Fore.RESET + "] " + Style.DIM
+        colored_label = self._get_atom_bracket_value(colorama_fore_color, label)
         formatted = f"{label:.<8} {Style.RESET_ALL + message}"
         colored_output = formatted.replace(label, colored_label, 1)
         print(colored_output)
+
+    def _display_left_padded_color_choice(self, index: int, choice: str):
+        option_colors = [
+            Fore.YELLOW,
+            Fore.RED,
+            Fore.GREEN,
+            Fore.BLUE,
+            Fore.MAGENTA,
+            Fore.CYAN
+        ]
+
+        str_index = str(index)
+        colored_option = self._get_atom_bracket_value(option_colors[index % len(option_colors)], str_index)
+        formatted = f"{str_index:>3} {Style.RESET_ALL + choice}"
+        colored_output = formatted.replace(str_index, colored_option, 1)
+        print(colored_output)
+
+    def _get_atom_bracket_value(self, colorama_color: str, value: str) -> str:
+        return Style.DIM + "[" + Style.RESET_ALL + colorama_color + value + Fore.RESET + Style.DIM + "]"
+
+    def _try_parse_int(self, string_input: str) -> int | None:
+        try:
+            return int(string_input)
+        except ValueError:
+            return None
+
 
