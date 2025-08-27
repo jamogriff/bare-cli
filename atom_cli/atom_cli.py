@@ -6,16 +6,7 @@ class AtomCLI:
     def title(self, title: str):
         """Displays a yellow title with a newline for breathing room."""
 
-        print(Fore.YELLOW + title)
-        print("=" * len(title))
-        print(Fore.RESET)
-
-    def section(self, header: str):
-        """Displays a section header with a newline for breathing room."""
-
-        print(header)
-        print("-" * len(header))
-        print()
+        print(self._get_atom_bracket_value(Fore.YELLOW, title) + Style.RESET_ALL)
 
     def info(self, message: str):
         self._display_right_padded_color_label("INFO", Fore.BLUE, message)
@@ -40,7 +31,7 @@ class AtomCLI:
             default = "no"
 
         displayed_default = self._get_atom_bracket_value(Fore.YELLOW, default)
-        print(f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}:")
+        print(f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}")
         response = input("> ")
 
         if response == "":
@@ -113,7 +104,7 @@ class AtomCLI:
         print(colored_output)
 
     def _get_atom_bracket_value(self, colorama_color: str, value: str) -> str:
-        return Style.DIM + "[" + Style.RESET_ALL + colorama_color + value + Fore.RESET + Style.DIM + "]"
+        return Style.DIM + "[ " + Style.RESET_ALL + Style.BRIGHT + colorama_color + value + Fore.RESET + Style.RESET_ALL + Style.DIM + " ] "
 
     def _try_parse_int(self, string_input: str) -> int | None:
         try:
