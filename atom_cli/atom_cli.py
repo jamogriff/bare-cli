@@ -1,12 +1,19 @@
 from colorama import Fore, Back, Style
 from .invalid_choice_error import InvalidChoiceError
+from .styled_string_factory import StyledStringFactory
+from .styled_string_formatter import StyledStringFormatter
 
 class AtomCLI:
 
-    def title(self, title: str):
-        """Displays a yellow title with a newline for breathing room."""
+    def __init__(self):
+        self.accent_color = Fore.YELLOW
+        self.styled_string_factory = StyledStringFactory()
+        self.styled_string_formatter = StyledStringFormatter()
 
-        print(self._get_atom_bracket_value(Fore.YELLOW, title) + Style.RESET_ALL)
+    def title(self, title: str):
+        """Displays a title in accent color."""
+
+        print(self.styled_string_factory.make_bracket(self.accent_color, title) + Style.RESET_ALL)
 
     def info(self, message: str):
         self._display_right_padded_color_label("INFO", Fore.BLUE, message)
@@ -21,8 +28,9 @@ class AtomCLI:
         self._display_right_padded_color_label("ERROR", Fore.RED, message)
 
     def ask(self, prompt: str) -> str:
-        print(prompt)
-        return input("> ")
+        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
+        input_prompt = self._get_signature_bracket_format("INPUT", self.accent_color, "")
+        return input(input_prompt)
 
     def confirm(self, prompt: str, *, permissive_by_default: bool = True) -> bool:
         if permissive_by_default:
@@ -30,9 +38,11 @@ class AtomCLI:
         else:
             default = "no"
 
-        displayed_default = self._get_atom_bracket_value(Fore.YELLOW, default)
-        print(f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}")
-        response = input("> ")
+        displayed_default = self.styled_string_factory.make_bracket(self.accent_color, default)
+        message = f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}"
+        self._display_right_padded_color_label("INPUT", self.accent_color, message)
+        input_prompt = self._get_signature_bracket_format("INPUT", self.accent_color, "")
+        response = input(input_prompt)
 
         if response == "":
             return default == "yes"
@@ -42,14 +52,16 @@ class AtomCLI:
             return False
 
     def choices(self, prompt: str, choices: list[str], *, allow_chances: bool = True) -> str:
+        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
+
         valid_inputs = [i for i in range(0, len(choices))]
-        print(prompt)
         for i, choice in enumerate(choices):
             self._display_left_padded_color_choice(i, choice)
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
-        print(prompt)
-        id_input = input("> ")
+        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
+        input_prompt = self._get_signature_bracket_format("INPUT", self.accent_color, "")
+        id_input = input(input_prompt).strip()
         int_input = self._try_parse_int(id_input)
 
         # If chances not allowed, raise exception immediately
@@ -68,8 +80,8 @@ class AtomCLI:
                     self.error("Please try again later.")
                     raise InvalidChoiceError()
 
-                print(prompt)
-                id_input = input("> ").strip()
+                self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
+                id_input = input(input_prompt).strip()
                 int_input = self._try_parse_int(id_input)
                 chances += 1
 
@@ -82,13 +94,12 @@ class AtomCLI:
         So we format the intended label first and then replace it with the colored version.
         """
 
-        colored_label = self._get_atom_bracket_value(colorama_fore_color, label)
-        formatted = f"{label:.<8} {Style.RESET_ALL + message}"
-        colored_output = formatted.replace(label, colored_label, 1)
-        print(colored_output)
+        formatted = self._get_signature_bracket_format(label, colorama_fore_color, message)
+        print(formatted)
 
     def _display_left_padded_color_choice(self, index: int, choice: str):
         option_colors = [
+            Fore.RESET,
             Fore.YELLOW,
             Fore.RED,
             Fore.GREEN,
@@ -98,13 +109,15 @@ class AtomCLI:
         ]
 
         str_index = str(index)
-        colored_option = self._get_atom_bracket_value(option_colors[index % len(option_colors)], str_index)
-        formatted = f"{str_index:>3} {Style.RESET_ALL + choice}"
-        colored_output = formatted.replace(str_index, colored_option, 1)
-        print(colored_output)
+        styled_string = self.styled_string_factory.make_bracket(option_colors[index % len(option_colors)], str_index)
+        formatted_option = self.styled_string_formatter.add_left_padding(styled_string)
+        line_label_styled_string = self.styled_string_factory.make_open_bracket(self.accent_color, "…")
+        formatted_line_label = self.styled_string_formatter(line_label_styled_string)
+        self._display_right_padded_color_label(formatted_line_label, self.accent_color, formatted_option)
 
-    def _get_atom_bracket_value(self, colorama_color: str, value: str) -> str:
-        return Style.DIM + "[ " + Style.RESET_ALL + Style.BRIGHT + colorama_color + value + Fore.RESET + Style.RESET_ALL + Style.DIM + " ] "
+    def _get_signature_bracket_format(self, label: str, colorama_fore_color: str, message: str) -> str:
+        styled_string = self.styled_string_factory.make_bracket(colorama_fore_color, label)
+        return self.styled_string_formatter.add_right_padding(styled_string)
 
     def _try_parse_int(self, string_input: str) -> int | None:
         try:
