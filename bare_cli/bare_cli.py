@@ -1,45 +1,38 @@
 from colorama import Fore, Back, Style
 from .invalid_choice_error import InvalidChoiceError
-from .block_factory import BlockFactory
-from .block_formatter import BlockFormatter
-from .statusline import StatusLine
+from .status import Status
+from .blocks.status_block import StatusBlock
+from .blocks.open_status_block import OpenStatusBlock
+from .blocks.choice_block import ChoiceBlock
+from .blocks.misc_block import MiscBlock
 
 
 class BareCLI:
 
     def __init__(self):
         self.accent_color = Fore.YELLOW
-        self.factory = BlockFactory(
-            block_start="[ ",
-            block_end=" ] ",
-            child_block_end="| "
-        )
-        self.formatter = BlockFormatter(
-            sidebar_width=12,
-            choice_width=8
-        )
 
     def title(self, title: str):
         """Displays a title in accent color."""
 
-        print(self.factory.make(self.accent_color, title) + Style.RESET_ALL)
+        print(MiscBlock(title, self.accent_color))
 
     def info(self, message: str):
-        self._print_bareline(StatusLine.INFO, Fore.BLUE, message)
+        print(self._get_bareline(Status.INFO, Fore.BLUE, message))
 
     def success(self, message: str):
-        self._print_bareline(StatusLine.SUCCESS, Fore.GREEN, message)
+        print(self._get_bareline(Status.SUCCESS, Fore.GREEN, message))
 
     def warning(self, message: str):
-        self._print_bareline(StatusLine.WARNING, Fore.YELLOW, message)
+        print(self._get_bareline(Status.WARNING, Fore.YELLOW, message))
 
     def error(self, message: str):
-        self._print_bareline(StatusLine.ERROR, Fore.RED, message)
+        print(self._get_bareline(Status.ERROR, Fore.RED, message))
 
     def ask(self, prompt: str) -> str:
-        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
+        print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
         input_prompt = self._get_bareline(
-            StatusLine.INPUT, self.accent_color, ""
+            Status.INPUT, self.accent_color, ""
         )
         return input(input_prompt)
 
@@ -49,11 +42,11 @@ class BareCLI:
         else:
             default = "no"
 
-        displayed_default = self.factory.make(self.accent_color, default)
-        message = f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}"
-        self._print_bareline(StatusLine.INPUT, self.accent_color, message)
+        displayed_default = MiscBlock(default, self.accent_color)
+        message = f"{prompt} (yes/no) {displayed_default}"
+        print(self._get_bareline(Status.INPUT, self.accent_color, message))
         input_prompt = self._get_bareline(
-            StatusLine.INPUT, self.accent_color, ""
+            Status.INPUT, self.accent_color, ""
         )
         response = input(input_prompt)
 
@@ -67,16 +60,16 @@ class BareCLI:
     def choices(
         self, prompt: str, choices: list[str], *, allow_chances: bool = True
     ) -> str:
-        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
+        print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
 
         valid_inputs = [i for i in range(0, len(choices))]
         for i, choice in enumerate(choices):
-            self._print_choice(i, choice)
+            print(self._get_choice_line(i, choice))
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
-        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
+        print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
         input_prompt = self._get_bareline(
-            StatusLine.INPUT, self.accent_color, ""
+            Status.INPUT, self.accent_color, ""
         )
         id_input = input(input_prompt).strip()
         int_input = self._try_parse_int(id_input)
@@ -97,30 +90,16 @@ class BareCLI:
                     self.error("Please try again later.")
                     raise InvalidChoiceError()
 
-                self._print_bareline(
-                    StatusLine.INPUT, self.accent_color, prompt
-                )
+                print(self._get_bareline(
+                    Status.INPUT, self.accent_color, prompt
+                ))
                 id_input = input(input_prompt).strip()
                 int_input = self._try_parse_int(id_input)
                 chances += 1
 
         return choices[int_input]
 
-    def _print_bareline(
-        self, status: StatusLine, colorama_fore_color: str, message: str
-    ):
-        """Display a right-padded colored label and a message.
-
-        ANSI color codes will break padding because Python counts their characters as strings.
-        So we format the intended label first and then replace it with the colored version.
-        """
-
-        formatted = self._get_bareline(
-            status, colorama_fore_color, message
-        )
-        print(formatted)
-
-    def _print_choice(self, index: int, choice: str):
+    def _get_choice_line(self, index: int, choice: str):
         option_colors = [
             Fore.RESET,
             Fore.YELLOW,
@@ -131,22 +110,18 @@ class BareCLI:
             Fore.CYAN,
         ]
 
-        str_index = str(index)
-        styled_string = self.factory.make(
-            option_colors[index % len(option_colors)], str_index
-        )
-        formatted_option = self.formatter.format_choice(styled_string, choice)
-        open_bracket = self.factory.make_child("INPUT")
-        formatted_block_line = self.formatter.format_sidebar(
-            open_bracket, formatted_option
-        )
-        print(formatted_block_line)
+        choice_block = ChoiceBlock(index, option_colors[index % len(option_colors)])
+        choice_line = f"{choice_block} {choice}"
+        open_block = OpenStatusBlock(Status.INPUT, self.accent_color)
+        return f"{open_block} {choice_line}"
 
     def _get_bareline(
-        self, status: StatusLine, colorama_fore_color: str, message: str
+        self, status: Status, colorama_fore_color: str, message: str
     ) -> str:
-        styled_string = self.factory.make(colorama_fore_color, status.value)
-        return self.formatter.format_sidebar(styled_string, message)
+        """A Bareline is composed of a StatusBlock in a sidebar and main content to the right."""
+
+        status_block = StatusBlock(status, colorama_fore_color)
+        return f"{status_block} {message}"
 
     def _try_parse_int(self, string_input: str) -> int | None:
         try:

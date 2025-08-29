@@ -1,6 +1,6 @@
 from enum import Enum
 
-class StatusLine(Enum):
+class Status(Enum):
     """Each line in BareCLI is prefixed with a status in the sidebar (e.g. INFO, OK, SUCCESS)."""
 
     INFO = "INFO"
