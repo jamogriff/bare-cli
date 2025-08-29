@@ -1,13 +1,13 @@
 import sys
-from colorama import Fore, Back, Style
-from .invalid_choice_error import InvalidChoiceError
+from colorama import Fore
 from .enums.status import Status
 from .enums.accent_color import AccentColor
-from .color_mapper import ColorMapper
 from .blocks.status_block import StatusBlock
 from .blocks.open_status_block import OpenStatusBlock
 from .blocks.choice_block import ChoiceBlock
 from .blocks.misc_block import MiscBlock
+from .invalid_choice_error import InvalidChoiceError
+from .color_mapper import ColorMapper
 
 
 class BareCLI:

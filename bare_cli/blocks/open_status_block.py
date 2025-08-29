@@ -1,4 +1,4 @@
-from colorama import Fore, Style
+from colorama import Style
 from .abstract_block import AbstractBlock
 from .status_block import StatusBlock
 
