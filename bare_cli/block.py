@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 @dataclass
 class Block:
     """Represents a string before and after adding ANSI values.

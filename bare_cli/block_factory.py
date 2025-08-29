@@ -5,9 +5,10 @@ from .block import Block
 class BlockFactory:
     """Houses low-level ANSI styling to create Block instances."""
 
-    BLOCK_START = "[ "
-    BLOCK_END = " ] "
-    CHILD_BLOCK_END = "| "
+    def __init__(self, *, block_start: str, block_end: str, child_block_end: str):
+        self._block_start = block_start
+        self._block_end = block_end
+        self._child_block_end = child_block_end
 
     def make(self, colorama_color: str, value: str) -> Block:
         """Return a colorized string bookended in block characters.
@@ -15,10 +16,10 @@ class BlockFactory:
         Example: [ INFO ]
         """
 
-        string = self.BLOCK_START + value + self.BLOCK_END
+        string = self._block_start + value + self._block_end
         ansi_string = (
             Style.DIM
-            + self.BLOCK_START
+            + self._block_start
             + Style.RESET_ALL
             + Style.BRIGHT
             + colorama_color
@@ -26,7 +27,7 @@ class BlockFactory:
             + Fore.RESET
             + Style.RESET_ALL
             + Style.DIM
-            + self.BLOCK_END
+            + self._block_end
         )
 
         return Block(string, ansi_string)
@@ -40,9 +41,9 @@ class BlockFactory:
         """
 
         parent_block_width = (
-            len(self.BLOCK_START) + len(parent_type) + len(self.BLOCK_END)
+            len(self._block_start) + len(parent_type) + len(self._block_end)
         )
-        string = f"{self.CHILD_BLOCK_END:>{parent_block_width}}"
+        string = f"{self._child_block_end:>{parent_block_width}}"
         ansi_string = Style.DIM + string
 
         return Block(string, ansi_string)

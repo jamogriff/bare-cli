@@ -8,14 +8,15 @@ class BlockFormatter:
     A typical BareCLI line is composed of a Block in a left 'sidebar' and main content on the right.
     """
 
-    SIDEBAR_WIDTH = 12
-    CHOICE_WIDTH = 8
+    def __init__(self, *, sidebar_width: int, choice_width: int):
+        self._sidebar_width = sidebar_width
+        self._choice_width = choice_width
 
     def format_sidebar(self, block: Block, main_content: str) -> str:
-        return self._format_block(block, main_content, ".", "<", self.SIDEBAR_WIDTH)
+        return self._format_block(block, main_content, ".", "<", self._sidebar_width)
 
     def format_choice(self, block: Block, main_content: str) -> str:
-        return self._format_block(block, main_content, "", ">", self.CHOICE_WIDTH)
+        return self._format_block(block, main_content, "", ">", self._choice_width)
 
     def _format_block(
         self, block: Block, main_content: str, fill: str, align: str, width: int

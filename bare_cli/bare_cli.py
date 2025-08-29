@@ -2,14 +2,22 @@ from colorama import Fore, Back, Style
 from .invalid_choice_error import InvalidChoiceError
 from .block_factory import BlockFactory
 from .block_formatter import BlockFormatter
+from .statusline import StatusLine
 
 
-class AtomCLI:
+class BareCLI:
 
     def __init__(self):
         self.accent_color = Fore.YELLOW
-        self.factory = BlockFactory()
-        self.formatter = BlockFormatter()
+        self.factory = BlockFactory(
+            block_start="[ ",
+            block_end=" ] ",
+            child_block_end="| "
+        )
+        self.formatter = BlockFormatter(
+            sidebar_width=12,
+            choice_width=8
+        )
 
     def title(self, title: str):
         """Displays a title in accent color."""
@@ -17,21 +25,21 @@ class AtomCLI:
         print(self.factory.make(self.accent_color, title) + Style.RESET_ALL)
 
     def info(self, message: str):
-        self._display_right_padded_color_label("INFO", Fore.BLUE, message)
+        self._print_bareline(StatusLine.INFO, Fore.BLUE, message)
 
     def success(self, message: str):
-        self._display_right_padded_color_label("OK", Fore.GREEN, message)
+        self._print_bareline(StatusLine.SUCCESS, Fore.GREEN, message)
 
     def warning(self, message: str):
-        self._display_right_padded_color_label("WARNING", Fore.YELLOW, message)
+        self._print_bareline(StatusLine.WARNING, Fore.YELLOW, message)
 
     def error(self, message: str):
-        self._display_right_padded_color_label("ERROR", Fore.RED, message)
+        self._print_bareline(StatusLine.ERROR, Fore.RED, message)
 
     def ask(self, prompt: str) -> str:
-        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
-        input_prompt = self._get_signature_bracket_format(
-            "INPUT", self.accent_color, ""
+        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
+        input_prompt = self._get_bareline(
+            StatusLine.INPUT, self.accent_color, ""
         )
         return input(input_prompt)
 
@@ -43,9 +51,9 @@ class AtomCLI:
 
         displayed_default = self.factory.make(self.accent_color, default)
         message = f"{prompt} (yes/no) {displayed_default + Style.RESET_ALL}"
-        self._display_right_padded_color_label("INPUT", self.accent_color, message)
-        input_prompt = self._get_signature_bracket_format(
-            "INPUT", self.accent_color, ""
+        self._print_bareline(StatusLine.INPUT, self.accent_color, message)
+        input_prompt = self._get_bareline(
+            StatusLine.INPUT, self.accent_color, ""
         )
         response = input(input_prompt)
 
@@ -59,16 +67,16 @@ class AtomCLI:
     def choices(
         self, prompt: str, choices: list[str], *, allow_chances: bool = True
     ) -> str:
-        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
+        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
 
         valid_inputs = [i for i in range(0, len(choices))]
         for i, choice in enumerate(choices):
-            self._display_left_padded_color_choice(i, choice)
+            self._print_choice(i, choice)
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
-        self._display_right_padded_color_label("INPUT", self.accent_color, prompt)
-        input_prompt = self._get_signature_bracket_format(
-            "INPUT", self.accent_color, ""
+        self._print_bareline(StatusLine.INPUT, self.accent_color, prompt)
+        input_prompt = self._get_bareline(
+            StatusLine.INPUT, self.accent_color, ""
         )
         id_input = input(input_prompt).strip()
         int_input = self._try_parse_int(id_input)
@@ -89,8 +97,8 @@ class AtomCLI:
                     self.error("Please try again later.")
                     raise InvalidChoiceError()
 
-                self._display_right_padded_color_label(
-                    "INPUT", self.accent_color, prompt
+                self._print_bareline(
+                    StatusLine.INPUT, self.accent_color, prompt
                 )
                 id_input = input(input_prompt).strip()
                 int_input = self._try_parse_int(id_input)
@@ -98,8 +106,8 @@ class AtomCLI:
 
         return choices[int_input]
 
-    def _display_right_padded_color_label(
-        self, label: str, colorama_fore_color: str, message: str
+    def _print_bareline(
+        self, status: StatusLine, colorama_fore_color: str, message: str
     ):
         """Display a right-padded colored label and a message.
 
@@ -107,12 +115,12 @@ class AtomCLI:
         So we format the intended label first and then replace it with the colored version.
         """
 
-        formatted = self._get_signature_bracket_format(
-            label, colorama_fore_color, message
+        formatted = self._get_bareline(
+            status, colorama_fore_color, message
         )
         print(formatted)
 
-    def _display_left_padded_color_choice(self, index: int, choice: str):
+    def _print_choice(self, index: int, choice: str):
         option_colors = [
             Fore.RESET,
             Fore.YELLOW,
@@ -134,10 +142,10 @@ class AtomCLI:
         )
         print(formatted_block_line)
 
-    def _get_signature_bracket_format(
-        self, label: str, colorama_fore_color: str, message: str
+    def _get_bareline(
+        self, status: StatusLine, colorama_fore_color: str, message: str
     ) -> str:
-        styled_string = self.factory.make(colorama_fore_color, label)
+        styled_string = self.factory.make(colorama_fore_color, status.value)
         return self.formatter.format_sidebar(styled_string, message)
 
     def _try_parse_int(self, string_input: str) -> int | None:
