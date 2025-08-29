@@ -44,4 +44,5 @@ class MiscBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        pass
+        # No alignment needed
+        return self.colorized

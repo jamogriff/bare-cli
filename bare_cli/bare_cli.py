@@ -99,7 +99,8 @@ class BareCLI:
                 int_input = self._try_parse_int(id_input)
                 chances += 1
 
-        return choices[int_input]
+        # int_input will not be None here since it would not exit the loop
+        return choices[int_input]  # type: ignore[index]
 
     def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):
         option_colors = [

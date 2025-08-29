@@ -1,5 +1,5 @@
-from .atom_cli import AtomCLI
+from .bare_cli import BareCLI
+from .enums.accent_color import AccentColor
+from .invalid_choice_error import InvalidChoiceError
 
-io = AtomCLI()
-
-__all__ = ["io"]
+__all__ = ["BareCLI", "AccentColor", "InvalidChoiceError"]
