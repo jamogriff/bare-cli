@@ -110,14 +110,14 @@ class AtomCLI:
 
         str_index = str(index)
         styled_string = self.styled_string_factory.make_bracket(option_colors[index % len(option_colors)], str_index)
-        formatted_option = self.styled_string_formatter.add_left_padding(styled_string)
-        line_label_styled_string = self.styled_string_factory.make_open_bracket(self.accent_color, "…")
-        formatted_line_label = self.styled_string_formatter(line_label_styled_string)
-        self._display_right_padded_color_label(formatted_line_label, self.accent_color, formatted_option)
+        formatted_option = self.styled_string_formatter.add_left_padding(styled_string, choice)
+        open_bracket = self.styled_string_factory.make_open_bracket("INPUT")
+        formatted_block_line = self.styled_string_formatter.add_right_padding(open_bracket, formatted_option)
+        print(formatted_block_line)
 
     def _get_signature_bracket_format(self, label: str, colorama_fore_color: str, message: str) -> str:
         styled_string = self.styled_string_factory.make_bracket(colorama_fore_color, label)
-        return self.styled_string_formatter.add_right_padding(styled_string)
+        return self.styled_string_formatter.add_right_padding(styled_string, message)
 
     def _try_parse_int(self, string_input: str) -> int | None:
         try:
