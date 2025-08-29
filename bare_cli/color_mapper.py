@@ -1,6 +1,7 @@
 from colorama import Fore
 from .enums.accent_color import AccentColor
 
+
 class ColorMapper:
     """Maps an AccentColor enum to a corresponding Colorama Fore color."""
 

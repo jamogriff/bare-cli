@@ -31,9 +31,7 @@ class BareCLI:
 
     def ask(self, prompt: str) -> str:
         print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
-        input_prompt = self._get_bareline(
-            Status.INPUT, self.accent_color, ""
-        )
+        input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
         return input(input_prompt)
 
     def confirm(self, prompt: str, *, permissive_by_default: bool = True) -> bool:
@@ -45,9 +43,7 @@ class BareCLI:
         displayed_default = MiscBlock(default, self.accent_color)
         message = f"{prompt} (yes/no) {displayed_default}"
         print(self._get_bareline(Status.INPUT, self.accent_color, message))
-        input_prompt = self._get_bareline(
-            Status.INPUT, self.accent_color, ""
-        )
+        input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
         response = input(input_prompt)
 
         if response == "":
@@ -58,7 +54,12 @@ class BareCLI:
             return False
 
     def choice(
-        self, prompt: str, choices: list[str], *, allow_chances: bool = True, exit_early: bool = True
+        self,
+        prompt: str,
+        choices: list[str],
+        *,
+        allow_chances: bool = True,
+        exit_early: bool = True,
     ) -> str:
         status_block = StatusBlock(Status.INPUT, self.accent_color)
         print(f"{status_block} {prompt}")
@@ -69,9 +70,7 @@ class BareCLI:
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
         print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
-        input_prompt = self._get_bareline(
-            Status.INPUT, self.accent_color, ""
-        )
+        input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
         id_input = input(input_prompt).strip()
         int_input = self._try_parse_int(id_input)
 
@@ -95,9 +94,7 @@ class BareCLI:
                         self.error("Please try again later.")
                         sys.exit(1)
 
-                print(self._get_bareline(
-                    Status.INPUT, self.accent_color, prompt
-                ))
+                print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
                 id_input = input(input_prompt).strip()
                 int_input = self._try_parse_int(id_input)
                 chances += 1

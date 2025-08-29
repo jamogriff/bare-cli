@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from colorama import Style
 
+
 class AbstractBlock(ABC):
 
     BLOCK_START = "["
@@ -22,10 +23,7 @@ class AbstractBlock(ABC):
     def aligned(self) -> str:
         pass
 
-
-    def _pad(
-        self, fill: str, align: str, width: int
-    ) -> str:
+    def _pad(self, fill: str, align: str, width: int) -> str:
         """ANSI color codes will break padding because Python counts their characters as strings.
 
         So we format the intended label first and then replace it with the colored version.

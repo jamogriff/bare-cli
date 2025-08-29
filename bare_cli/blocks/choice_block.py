@@ -1,6 +1,7 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 
+
 class ChoiceBlock(AbstractBlock):
     """Represents a string before and after adding ANSI values.
 
@@ -38,7 +39,3 @@ class ChoiceBlock(AbstractBlock):
     @property
     def aligned(self) -> str:
         return self._pad("", ">", self.WIDTH)
-
-
-
-

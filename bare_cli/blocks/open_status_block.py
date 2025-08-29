@@ -2,6 +2,7 @@ from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 from .status_block import StatusBlock
 
+
 class OpenStatusBlock(AbstractBlock):
     """Return a nested block element that has empty content but matches the parent block's length.
 
@@ -29,7 +30,3 @@ class OpenStatusBlock(AbstractBlock):
     @property
     def aligned(self) -> str:
         return self._pad("", "<", self.SIDEBAR_WIDTH)
-
-
-
-

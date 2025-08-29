@@ -2,6 +2,7 @@ from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 from ..enums.status import Status
 
+
 class StatusBlock(AbstractBlock):
     """Represents a string before and after adding ANSI values.
 
@@ -23,7 +24,7 @@ class StatusBlock(AbstractBlock):
     @property
     def raw(self) -> str:
         return self.block_start + self.content + self.block_end
-        
+
     @property
     def colorized(self) -> str:
         return (
@@ -42,7 +43,3 @@ class StatusBlock(AbstractBlock):
     @property
     def aligned(self) -> str:
         return self._pad(".", "<", self.SIDEBAR_WIDTH)
-
-
-
-

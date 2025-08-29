@@ -1,6 +1,7 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 
+
 class MiscBlock(AbstractBlock):
     """Represents a string before and after adding ANSI values.
 
@@ -44,7 +45,3 @@ class MiscBlock(AbstractBlock):
     @property
     def aligned(self) -> str:
         pass
-
-
-
-
