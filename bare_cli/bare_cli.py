@@ -15,7 +15,7 @@ class BareCLI:
     def title(self, title: str):
         """Displays a title in accent color."""
 
-        print(MiscBlock(title, self.accent_color))
+        print(MiscBlock(title, self.accent_color, add_spacing=True))
 
     def info(self, message: str):
         print(self._get_bareline(Status.INFO, Fore.BLUE, message))
@@ -60,11 +60,12 @@ class BareCLI:
     def choices(
         self, prompt: str, choices: list[str], *, allow_chances: bool = True
     ) -> str:
-        print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
+        status_block = StatusBlock(Status.INPUT, self.accent_color)
+        print(f"{status_block} {prompt}")
 
         valid_inputs = [i for i in range(0, len(choices))]
         for i, choice in enumerate(choices):
-            print(self._get_choice_line(i, choice))
+            print(self._get_choice_line(i, choice, status_block))
 
         prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
         print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
@@ -99,7 +100,7 @@ class BareCLI:
 
         return choices[int_input]
 
-    def _get_choice_line(self, index: int, choice: str):
+    def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):
         option_colors = [
             Fore.RESET,
             Fore.YELLOW,
@@ -112,7 +113,7 @@ class BareCLI:
 
         choice_block = ChoiceBlock(index, option_colors[index % len(option_colors)])
         choice_line = f"{choice_block} {choice}"
-        open_block = OpenStatusBlock(Status.INPUT, self.accent_color)
+        open_block = OpenStatusBlock(parent_block)
         return f"{open_block} {choice_line}"
 
     def _get_bareline(

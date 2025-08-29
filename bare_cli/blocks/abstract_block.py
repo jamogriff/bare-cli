@@ -3,9 +3,9 @@ from colorama import Style
 
 class AbstractBlock(ABC):
 
-    BLOCK_START = "[ "
-    BLOCK_END = " ] "
-    SIDEBAR_WIDTH = 12
+    BLOCK_START = "["
+    BLOCK_END = "]"
+    SIDEBAR_WIDTH = 11
 
     @property
     @abstractmethod

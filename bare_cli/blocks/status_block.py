@@ -14,19 +14,21 @@ class StatusBlock(AbstractBlock):
     def __init__(self, status: Status, color: str):
         self.content = status.value
         self.color = color
+        self.block_start = self.BLOCK_START + " "
+        self.block_end = " " + self.BLOCK_END + " "
 
     def __str__(self) -> str:
         return self.aligned
 
     @property
     def raw(self) -> str:
-        return self.BLOCK_START + self.content + self.BLOCK_END
+        return self.block_start + self.content + self.block_end
         
     @property
     def colorized(self) -> str:
         return (
             Style.DIM
-            + self.BLOCK_START
+            + self.block_start
             + Style.RESET_ALL
             + Style.BRIGHT
             + self.color
@@ -34,7 +36,7 @@ class StatusBlock(AbstractBlock):
             + Fore.RESET
             + Style.RESET_ALL
             + Style.DIM
-            + self.BLOCK_END
+            + self.block_end
         )
 
     @property

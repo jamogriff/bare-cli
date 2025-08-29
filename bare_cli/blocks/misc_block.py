@@ -7,22 +7,29 @@ class MiscBlock(AbstractBlock):
     Blocks are the core visual identity of BareCLI and are the only components that contain color.
     """
 
-    def __init__(self, content: str, color: str):
+    def __init__(self, content: str, color: str, *, add_spacing: bool = False):
         self.content = content
         self.color = color
+
+        if add_spacing:
+            self.block_start = self.BLOCK_START + " "
+            self.block_end = " " + self.BLOCK_END + " "
+        else:
+            self.block_start = self.BLOCK_START
+            self.block_end = self.BLOCK_END
 
     def __str__(self) -> str:
         return self.colorized
 
     @property
     def raw(self) -> str:
-        return self.BLOCK_START + self.content + self.BLOCK_END
+        return self.block_start + self.content + self.block_end
 
     @property
     def colorized(self) -> str:
         return (
             Style.DIM
-            + self.BLOCK_START
+            + self.block_start
             + Style.RESET_ALL
             + Style.BRIGHT
             + self.color
@@ -30,7 +37,7 @@ class MiscBlock(AbstractBlock):
             + Fore.RESET
             + Style.RESET_ALL
             + Style.DIM
-            + self.BLOCK_END
+            + self.block_end
             + Style.RESET_ALL
         )
 

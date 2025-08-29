@@ -1,5 +1,6 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
+from .status_block import StatusBlock
 from ..status import Status
 
 class OpenStatusBlock(AbstractBlock):
@@ -12,11 +13,8 @@ class OpenStatusBlock(AbstractBlock):
 
     CHILD_BLOCK_END = "| "
 
-    def __init__(self, status: Status, color: str):
-        self.parent_block_width =(
-            len(self.BLOCK_START) + len(status.value) + len(self.BLOCK_END)
-        )
-        self.color = color
+    def __init__(self, parent: StatusBlock):
+        self.parent_block_width = len(parent.raw)
 
     def __str__(self) -> str:
         return self.aligned
@@ -31,7 +29,7 @@ class OpenStatusBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._pad(".", "<", self.SIDEBAR_WIDTH)
+        return self._pad("", "<", self.SIDEBAR_WIDTH)
 
 
 

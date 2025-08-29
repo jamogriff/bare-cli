@@ -7,7 +7,7 @@ class ChoiceBlock(AbstractBlock):
     Blocks are the core visual identity of BareCLI and are the only components that contain color.
     """
 
-    WIDTH = 8
+    WIDTH = 4
 
     def __init__(self, choice: int, color: str):
         self.content = str(choice)
