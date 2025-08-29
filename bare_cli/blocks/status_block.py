@@ -1,6 +1,6 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
-from ..status import Status
+from ..enums.status import Status
 
 class StatusBlock(AbstractBlock):
     """Represents a string before and after adding ANSI values.

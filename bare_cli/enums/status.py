@@ -6,6 +6,5 @@ class Status(Enum):
     INFO = "INFO"
     SUCCESS = "OK"
     ERROR = "ERROR"
-    WARNING = "WARNING"
     INPUT = "INPUT"
 

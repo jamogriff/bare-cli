@@ -1,6 +1,9 @@
+import sys
 from colorama import Fore, Back, Style
 from .invalid_choice_error import InvalidChoiceError
-from .status import Status
+from .enums.status import Status
+from .enums.accent_color import AccentColor
+from .color_mapper import ColorMapper
 from .blocks.status_block import StatusBlock
 from .blocks.open_status_block import OpenStatusBlock
 from .blocks.choice_block import ChoiceBlock
@@ -9,8 +12,8 @@ from .blocks.misc_block import MiscBlock
 
 class BareCLI:
 
-    def __init__(self):
-        self.accent_color = Fore.YELLOW
+    def __init__(self, accent_color: AccentColor = AccentColor.YELLOW):
+        self.accent_color = ColorMapper().from_accent_color(accent_color)
 
     def title(self, title: str):
         """Displays a title in accent color."""
@@ -22,9 +25,6 @@ class BareCLI:
 
     def success(self, message: str):
         print(self._get_bareline(Status.SUCCESS, Fore.GREEN, message))
-
-    def warning(self, message: str):
-        print(self._get_bareline(Status.WARNING, Fore.YELLOW, message))
 
     def error(self, message: str):
         print(self._get_bareline(Status.ERROR, Fore.RED, message))
@@ -57,8 +57,8 @@ class BareCLI:
         else:
             return False
 
-    def choices(
-        self, prompt: str, choices: list[str], *, allow_chances: bool = True
+    def choice(
+        self, prompt: str, choices: list[str], *, allow_chances: bool = True, exit_early: bool = True
     ) -> str:
         status_block = StatusBlock(Status.INPUT, self.accent_color)
         print(f"{status_block} {prompt}")
@@ -77,19 +77,23 @@ class BareCLI:
 
         # If chances not allowed, raise exception immediately
         if not allow_chances and int_input not in valid_inputs:
-            self.error("Please try again later.")
-            raise InvalidChoiceError()
+            if not exit_early:
+                raise InvalidChoiceError()
+            else:
+                self.error("Please try again later.")
+                sys.exit(1)
 
         # If chances allowed, give user multiple chances to make a selection
         if allow_chances and int_input not in valid_inputs:
             chances = 1
             chance_limit = 3
             while int_input not in valid_inputs:
-                if chances == chance_limit - 1:
-                    self.warning("Please stop faffing about.")
-                elif chances >= chance_limit:
-                    self.error("Please try again later.")
-                    raise InvalidChoiceError()
+                if chances >= chance_limit:
+                    if not exit_early:
+                        raise InvalidChoiceError()
+                    else:
+                        self.error("Please try again later.")
+                        sys.exit(1)
 
                 print(self._get_bareline(
                     Status.INPUT, self.accent_color, prompt
@@ -112,9 +116,8 @@ class BareCLI:
         ]
 
         choice_block = ChoiceBlock(index, option_colors[index % len(option_colors)])
-        choice_line = f"{choice_block} {choice}"
         open_block = OpenStatusBlock(parent_block)
-        return f"{open_block} {choice_line}"
+        return f"{open_block} {choice_block} {choice}"
 
     def _get_bareline(
         self, status: Status, colorama_fore_color: str, message: str

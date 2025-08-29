@@ -1,7 +1,6 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 from .status_block import StatusBlock
-from ..status import Status
 
 class OpenStatusBlock(AbstractBlock):
     """Return a nested block element that has empty content but matches the parent block's length.
@@ -11,7 +10,7 @@ class OpenStatusBlock(AbstractBlock):
                 | < Child block
     """
 
-    CHILD_BLOCK_END = "| "
+    CHILD_BLOCK_END = "› "
 
     def __init__(self, parent: StatusBlock):
         self.parent_block_width = len(parent.raw)
