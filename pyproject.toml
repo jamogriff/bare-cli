@@ -1,7 +1,7 @@
 [project]
 name = "bare-cli"
 version = "1.0.0"
-description = "May your CLI code be semantic and your IO beautifully bare."
+description = "May your CLI code be semantic and your text output beautifully bare."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
