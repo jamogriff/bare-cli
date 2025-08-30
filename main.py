@@ -1,6 +1,7 @@
 import sys
 from bare_cli.bare_cli import BareCLI
 
+
 def demo():
     # Bread and butter
     io = BareCLI()
@@ -18,6 +19,7 @@ def demo():
     # Bells and whistles
     from bare_cli.invalid_choice_error import InvalidChoiceError
     from bare_cli.enums import Color
+
     io.success("Optional modules imported")
 
     choices = ["Noodles", "Burgers", "Street Meat", "Tacos", "Cheesecake"]

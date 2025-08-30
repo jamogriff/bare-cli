@@ -9,6 +9,7 @@ class Color(Enum):
     BLUE = "BLUE"
     YELLOW = "YELLOW"
 
+
 class Status(Enum):
     """The vast majority of BareCLI's line output is prefixed with a status in the left sidebar."""
 

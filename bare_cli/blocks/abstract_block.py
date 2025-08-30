@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from colorama import Style
+from colorama import Fore, Style
 
 
 class AbstractBlock(ABC):
@@ -10,9 +10,9 @@ class AbstractBlock(ABC):
     working with these objects is seamless.
     """
 
-    BLOCK_START = "["
-    BLOCK_END = "]"
     SIDEBAR_WIDTH = 11
+    block_start: str = "["
+    block_end: str = "]"
 
     @property
     @abstractmethod
@@ -28,6 +28,22 @@ class AbstractBlock(ABC):
     @abstractmethod
     def aligned(self) -> str:
         pass
+
+    def _get_bare_block(self, content: str, color: str) -> str:
+        """Return the signature block style of BareCLI."""
+
+        return (
+            Style.DIM
+            + self.block_start
+            + Style.RESET_ALL
+            + Style.BRIGHT
+            + color
+            + content
+            + Fore.RESET
+            + Style.RESET_ALL
+            + Style.DIM
+            + self.block_end
+        )
 
     def _align(self, fill: str, align: str, width: int) -> str:
         """Align a colorized string with provided format.

@@ -1,4 +1,3 @@
-from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 
 
@@ -23,22 +22,11 @@ class ChoiceBlock(AbstractBlock):
 
     @property
     def raw(self) -> str:
-        return self.BLOCK_START + self.content + self.BLOCK_END
+        return self.block_start + self.content + self.block_end
 
     @property
     def colorized(self) -> str:
-        return (
-            Style.DIM
-            + self.BLOCK_START
-            + Style.RESET_ALL
-            + Style.BRIGHT
-            + self.color
-            + self.content
-            + Fore.RESET
-            + Style.RESET_ALL
-            + Style.DIM
-            + self.BLOCK_END
-        )
+        return self._get_bare_block(self.content, self.color)
 
     @property
     def aligned(self) -> str:

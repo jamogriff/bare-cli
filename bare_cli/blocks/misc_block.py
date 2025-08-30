@@ -1,4 +1,3 @@
-from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 
 
@@ -16,11 +15,8 @@ class MiscBlock(AbstractBlock):
         self.color = color
 
         if add_spacing:
-            self.block_start = self.BLOCK_START + " "
-            self.block_end = " " + self.BLOCK_END + " "
-        else:
-            self.block_start = self.BLOCK_START
-            self.block_end = self.BLOCK_END
+            self.block_start = self.block_start + " "
+            self.block_end = " " + self.block_end + " "
 
     def __str__(self) -> str:
         return self.colorized
@@ -31,19 +27,7 @@ class MiscBlock(AbstractBlock):
 
     @property
     def colorized(self) -> str:
-        return (
-            Style.DIM
-            + self.block_start
-            + Style.RESET_ALL
-            + Style.BRIGHT
-            + self.color
-            + self.content
-            + Fore.RESET
-            + Style.RESET_ALL
-            + Style.DIM
-            + self.block_end
-            + Style.RESET_ALL
-        )
+        return self._get_bare_block(self.content, self.color)
 
     @property
     def aligned(self) -> str:

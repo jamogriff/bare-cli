@@ -11,13 +11,13 @@ class NestedStatusBlock(AbstractBlock):
 
     Example:
         [ INPUT ]
-                ›  < Child block
-                ›  < Child block
-                ›  < Child block
+                |  < Child block
+                |  < Child block
+                |  < Child block
         [ INPUT ]
     """
 
-    CHILD_BLOCK_END = "› "
+    CHILD_BLOCK_END = "| "
 
     def __init__(self, parent: StatusBlock):
         self.parent_block_width = len(parent.raw)
@@ -35,4 +35,4 @@ class NestedStatusBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._align("", "<", self.SIDEBAR_WIDTH)
+        return self._align("›", "<", self.SIDEBAR_WIDTH)

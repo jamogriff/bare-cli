@@ -1,4 +1,3 @@
-from colorama import Fore, Style
 from .abstract_block import AbstractBlock
 from ..enums import Status
 
@@ -15,8 +14,8 @@ class StatusBlock(AbstractBlock):
     def __init__(self, status: Status, color: str):
         self.content = status.value
         self.color = color
-        self.block_start = self.BLOCK_START + " "
-        self.block_end = " " + self.BLOCK_END + " "
+        self.block_start = self.block_start + " "
+        self.block_end = " " + self.block_end + " "
 
     def __str__(self) -> str:
         return self.aligned
@@ -27,18 +26,7 @@ class StatusBlock(AbstractBlock):
 
     @property
     def colorized(self) -> str:
-        return (
-            Style.DIM
-            + self.block_start
-            + Style.RESET_ALL
-            + Style.BRIGHT
-            + self.color
-            + self.content
-            + Fore.RESET
-            + Style.RESET_ALL
-            + Style.DIM
-            + self.block_end
-        )
+        return self._get_bare_block(self.content, self.color)
 
     @property
     def aligned(self) -> str:

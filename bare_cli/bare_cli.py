@@ -12,7 +12,7 @@ from .color_mapper import ColorMapper
 class BareCLI:
     """May your CLI code be semantic and your IO beautifully bare.
 
-    Pass a Color to the constructor to color your title and input status blocks. 
+    Pass a Color to the constructor to color your title and input status blocks.
     """
 
     def __init__(self, accent_color: Color = Color.YELLOW):
