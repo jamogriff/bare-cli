@@ -19,9 +19,9 @@ class BareCLI:
         self.accent_color = ColorMapper().from_color(accent_color)
 
     def title(self, title: str):
-        """Display a title in accent color."""
+        """Display a title in accent color sandwiched by newlines."""
 
-        print(MiscBlock(title, self.accent_color, add_spacing=True))
+        print(f"\n{MiscBlock(title, self.accent_color, add_spacing=True)}\n")
 
     def info(self, message: str):
         """Display a blue info status sidebar and a main content message."""
@@ -58,7 +58,7 @@ class BareCLI:
             default = "no"
 
         displayed_default = MiscBlock(default, self.accent_color)
-        message = f"{prompt} (yes/no) {displayed_default}"
+        message = f"{prompt} (yes/no) {displayed_default}:"
         print(self._get_bareline(Status.INPUT, self.accent_color, message))
         input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
         response = input(input_prompt)
@@ -97,7 +97,7 @@ class BareCLI:
         for i, choice in enumerate(choices):
             print(self._get_choice_line(i, choice, status_block))
 
-        prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}."
+        prompt = f"Enter a number from {valid_inputs[0]} to {valid_inputs[-1]}:"
         print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
         input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
         id_input = input(input_prompt).strip()

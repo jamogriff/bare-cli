@@ -30,7 +30,7 @@ class AbstractBlock(ABC):
         pass
 
     def _get_bare_block(self, content: str, color: str) -> str:
-        """Return the signature block style of BareCLI."""
+        """Return the signature colorized block style of BareCLI."""
 
         return (
             Style.DIM

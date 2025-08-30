@@ -6,8 +6,6 @@ def demo():
     # Bread and butter
     io = BareCLI()
     io.title("Welcome to the BareCLI Demo")
-    io.info("Starting initialization...")
-    io.success("Vibe set")
     name = io.ask("What is your name?")
     likes_cli = io.confirm(f"Do you like command line interfaces, {name}?")
 
@@ -22,13 +20,10 @@ def demo():
 
     io.success("Optional modules imported")
 
-    choices = ["Noodles", "Burgers", "Street Meat", "Tacos", "Cheesecake"]
-    io.success("Choice variables created")
-    print()
-
     io = BareCLI(Color.CYAN)
-    io.title("Customizable Accent Colors!")
+    io.info(f"Set accent color to {Color.CYAN.value}")
     try:
+        choices = ["Noodles", "Burgers", "Street Meat", "Tacos", "Cheesecake"]
         choice = io.choice("What is your favorite food?", choices, exit_early=False)
         io.info(f"Chose {choice[0]}: {choice[1]}")
         io.success("Adios amigo!")
