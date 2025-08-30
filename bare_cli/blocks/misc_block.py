@@ -3,9 +3,12 @@ from .abstract_block import AbstractBlock
 
 
 class MiscBlock(AbstractBlock):
-    """Represents a string before and after adding ANSI values.
+    """Return a colorized value bookended in block characters.
 
-    Blocks are the core visual identity of BareCLI and are the only components that contain color.
+    MiscBlocks can be peppered around since they have no internal alignment. are always displayed in the left sidebar and right padded. They give a
+    Use the add_spacing kwarg to add spacing around a given value.
+
+    Examples: [ The Title ], [yes]
     """
 
     def __init__(self, content: str, color: str, *, add_spacing: bool = False):

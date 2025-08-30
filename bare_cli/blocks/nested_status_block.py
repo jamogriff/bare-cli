@@ -3,12 +3,18 @@ from .abstract_block import AbstractBlock
 from .status_block import StatusBlock
 
 
-class OpenStatusBlock(AbstractBlock):
-    """Return a nested block element that has empty content but matches the parent block's length.
+class NestedStatusBlock(AbstractBlock):
+    """Return a nested block element that pads to the parent StatusBlock's length.
+
+    Like StatusBlocks, these are always displayed in the left sidebar; however, these are used
+    to keep the vertical log nature of BareCLI clean by not spamming the same status on every line.
 
     Example:
         [ INPUT ]
-                | < Child block
+                ›  < Child block
+                ›  < Child block
+                ›  < Child block
+        [ INPUT ]
     """
 
     CHILD_BLOCK_END = "› "
@@ -29,4 +35,4 @@ class OpenStatusBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._pad("", "<", self.SIDEBAR_WIDTH)
+        return self._align("", "<", self.SIDEBAR_WIDTH)

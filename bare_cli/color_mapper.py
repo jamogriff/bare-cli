@@ -1,19 +1,23 @@
 from colorama import Fore
-from .enums.accent_color import AccentColor
+from .enums import Color
 
 
 class ColorMapper:
-    """Maps an AccentColor enum to a corresponding Colorama Fore color."""
+    """Maps a Color enum to a corresponding Colorama Fore color.
 
-    def from_accent_color(self, accent: AccentColor) -> str:
+    Used so consumers of BareCLI do not have to import Colorama to set
+    an accent color.
+    """
+
+    def from_color(self, accent: Color) -> str:
         match accent:
-            case AccentColor.CYAN:
+            case Color.CYAN:
                 return Fore.CYAN
-            case AccentColor.MAGENTA:
+            case Color.MAGENTA:
                 return Fore.MAGENTA
-            case AccentColor.BLUE:
+            case Color.BLUE:
                 return Fore.BLUE
-            case AccentColor.YELLOW:
+            case Color.YELLOW:
                 return Fore.YELLOW
             case _:
                 # Default to yellow if no match

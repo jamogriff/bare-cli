@@ -3,9 +3,13 @@ from .abstract_block import AbstractBlock
 
 
 class ChoiceBlock(AbstractBlock):
-    """Represents a string before and after adding ANSI values.
+    """Return a colorized int bookended in block characters.
 
-    Blocks are the core visual identity of BareCLI and are the only components that contain color.
+    ChoiceBlocks are used to house the int choices a user can select
+    when using the choice method. These are similar to all other blocks
+    but are left padded.
+
+    Example: [3] An option here
     """
 
     WIDTH = 4
@@ -38,4 +42,4 @@ class ChoiceBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._pad("", ">", self.WIDTH)
+        return self._align("", ">", self.WIDTH)

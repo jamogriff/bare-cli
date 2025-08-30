@@ -1,15 +1,15 @@
 from colorama import Fore, Style
 from .abstract_block import AbstractBlock
-from ..enums.status import Status
+from ..enums import Status
 
 
 class StatusBlock(AbstractBlock):
-    """Represents a string before and after adding ANSI values.
+    """Return a colorized status bookended in block characters with ample spacing.
 
-    Blocks are the core visual identity of BareCLI and are the only components that contain color.
-    Return a colorized string bookended in block characters.
+    StatusBlocks are always displayed in the left sidebar and right padded. They give a
+    quick visual indication of the type of content that is immediately to the right.
 
-    Example: [ INFO ]
+    Example: [ ERROR ] .. Main content here
     """
 
     def __init__(self, status: Status, color: str):
@@ -42,4 +42,4 @@ class StatusBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._pad(".", "<", self.SIDEBAR_WIDTH)
+        return self._align(".", "<", self.SIDEBAR_WIDTH)

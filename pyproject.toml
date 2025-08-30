@@ -1,7 +1,7 @@
 [project]
-name = "jamog-cli-style"
-version = "0.1.0"
-description = "Add your description here"
+name = "bare-cli"
+version = "1.0.0"
+description = "May your CLI code be semantic and your IO beautifully bare."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

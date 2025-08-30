@@ -1,9 +1,8 @@
 import sys
 from colorama import Fore
-from .enums.status import Status
-from .enums.accent_color import AccentColor
+from .enums import Color, Status
 from .blocks.status_block import StatusBlock
-from .blocks.open_status_block import OpenStatusBlock
+from .blocks.nested_status_block import NestedStatusBlock
 from .blocks.choice_block import ChoiceBlock
 from .blocks.misc_block import MiscBlock
 from .invalid_choice_error import InvalidChoiceError
@@ -11,30 +10,48 @@ from .color_mapper import ColorMapper
 
 
 class BareCLI:
+    """May your CLI code be semantic and your IO beautifully bare.
 
-    def __init__(self, accent_color: AccentColor = AccentColor.YELLOW):
-        self.accent_color = ColorMapper().from_accent_color(accent_color)
+    Pass a Color to the constructor to color your title and input status blocks. 
+    """
+
+    def __init__(self, accent_color: Color = Color.YELLOW):
+        self.accent_color = ColorMapper().from_color(accent_color)
 
     def title(self, title: str):
-        """Displays a title in accent color."""
+        """Display a title in accent color."""
 
         print(MiscBlock(title, self.accent_color, add_spacing=True))
 
     def info(self, message: str):
+        """Display a blue info status sidebar and a main content message."""
+
         print(self._get_bareline(Status.INFO, Fore.BLUE, message))
 
     def success(self, message: str):
+        """Display a green success status sidebar and a main content message."""
+
         print(self._get_bareline(Status.SUCCESS, Fore.GREEN, message))
 
     def error(self, message: str):
+        """Display a red error status sidebar and a main content message."""
+
         print(self._get_bareline(Status.ERROR, Fore.RED, message))
 
     def ask(self, prompt: str) -> str:
+        """Prompt the user for input."""
+
         print(self._get_bareline(Status.INPUT, self.accent_color, prompt))
         input_prompt = self._get_bareline(Status.INPUT, self.accent_color, "")
-        return input(input_prompt)
+        return input(input_prompt).strip()
 
     def confirm(self, prompt: str, *, permissive_by_default: bool = True) -> bool:
+        """Prompt the user to answer a boolean question.
+
+        Use the permissive_by_default kwarg to set the default bool to allow
+        the user to just hit the Enter key instead of typing in an answer.
+        """
+
         if permissive_by_default:
             default = "yes"
         else:
@@ -60,7 +77,19 @@ class BareCLI:
         *,
         allow_chances: bool = True,
         exit_early: bool = True,
-    ) -> str:
+    ) -> tuple[int, str]:
+        """Prompt the user to choose a value from a list of choices and return tuple with index and value.
+
+        Setting the allow_chances kwarg to True gives the user multiple chances to select
+        a valid option.
+        Setting the exit_early kwarg to True will exit the program with an error message
+        when the user fails to make a valid selection. Setting this to False will instead
+        raise an InvalidChoiceError for your own code to handle how you want.
+
+        Raises:
+            InvalidChoiceError: When exit_early set to False and user fails to make a valid choice
+        """
+
         status_block = StatusBlock(Status.INPUT, self.accent_color)
         print(f"{status_block} {prompt}")
 
@@ -74,7 +103,7 @@ class BareCLI:
         id_input = input(input_prompt).strip()
         int_input = self._try_parse_int(id_input)
 
-        # If chances not allowed, raise exception immediately
+        # Boot out immediately if chances not allowed
         if not allow_chances and int_input not in valid_inputs:
             if not exit_early:
                 raise InvalidChoiceError()
@@ -100,9 +129,11 @@ class BareCLI:
                 chances += 1
 
         # int_input will not be None here since it would not exit the loop
-        return choices[int_input]  # type: ignore[index]
+        return (int_input, choices[int_input])  # type: ignore[index, return-value]
 
     def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):
+        """Get formatted string for a choice line when using the choice method."""
+
         option_colors = [
             Fore.RESET,
             Fore.YELLOW,
@@ -114,18 +145,20 @@ class BareCLI:
         ]
 
         choice_block = ChoiceBlock(index, option_colors[index % len(option_colors)])
-        open_block = OpenStatusBlock(parent_block)
-        return f"{open_block} {choice_block} {choice}"
+        nested_block = NestedStatusBlock(parent_block)
+        return f"{nested_block} {choice_block} {choice}"
 
     def _get_bareline(
         self, status: Status, colorama_fore_color: str, message: str
     ) -> str:
-        """A Bareline is composed of a StatusBlock in a sidebar and main content to the right."""
+        """Get the signature line of BareCLI: a StatusBlock in left sidebar and main content to the right."""
 
         status_block = StatusBlock(status, colorama_fore_color)
         return f"{status_block} {message}"
 
     def _try_parse_int(self, string_input: str) -> int | None:
+        """Attempt to parse user input ints for choice method."""
+
         try:
             return int(string_input)
         except ValueError:
