@@ -1,3 +1,5 @@
+# Copyright 2025 Jamison Griffith
+# Licensed under the Apache License, Version 2.0 (see LICENSE file for details)
 import sys
 from colorama import Fore
 from .enums import Color, Status

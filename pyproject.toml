@@ -3,7 +3,28 @@ name = "bare-cli"
 version = "1.0.0"
 description = "May your CLI code be semantic and your text output beautifully bare."
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+  { name="Jamison Griffith", email="jamison.griffith@gmail.com" }
+]
 requires-python = ">=3.10"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Terminals",
+    "Topic :: Utilities"
+]
+keywords = [
+    "cli", "color", "colors", "terminal",
+    "console", "ansi", "style", "styles",
+    "text", "command-line", "formatting"
+]
 dependencies = [
     "colorama>=0.4.6",
 ]
@@ -15,3 +36,9 @@ dev = [
     "ruff>=0.12.11",
     "types-colorama>=0.4.15.20250801",
 ]
+
+[project.urls]
+Homepage = "https://github.com/jamogriff/bare-cli"
+Documentation = "https://github.com/jamogriff/bare-cli/blob/main/README.md"
+Source = "https://github.com/jamogriff/bare-cli"
+Issues = "https://github.com/jamogriff/bare-cli/issues"

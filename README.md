@@ -93,7 +93,7 @@ answer: bool = io.confirm("Do you like programming?, permissive_by_default=False
 
 #### io.choice()
 
-Prompt the user to choose a value from a list of choices and return tuple with chosen index and value.
+Prompt the user to choose a value from a list of choices and return a tuple with chosen index and value.
 
 The default behavior for this method is to give the user multiple chances
 to choose a valid option and in the case they don't choose one BareCLI will exit the program.
