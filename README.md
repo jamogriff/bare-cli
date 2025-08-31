@@ -1,7 +1,7 @@
 # BareCLI
 
 May your CLI code be semantic and your text output beautifully bare.
-![A demo of BareCLI](screenshot.png "May your CLI code be semantic and your text output beautifully bare.")
+![A demo of BareCLI](https://raw.githubusercontent.com/jamogriff/bare-cli/refs/heads/1.0.0/screenshot.png "May your CLI code be semantic and your text output beautifully bare.")
 
 BareCLI is a slim Python package designed to keep your CLI code semantic
 by providing beautiful text output styling. BareCLI features a status sidebar
