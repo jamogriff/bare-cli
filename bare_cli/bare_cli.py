@@ -9,6 +9,7 @@ from .blocks.choice_block import ChoiceBlock
 from .blocks.misc_block import MiscBlock
 from .invalid_choice_error import InvalidChoiceError
 from .color_mapper import ColorMapper
+from .table_planner import TablePlanner
 
 
 class BareCLI:
@@ -132,6 +133,20 @@ class BareCLI:
 
         # int_input will not be None here since it would not exit the loop
         return (int_input, choices[int_input])  # type: ignore[index, return-value]
+
+    def table(self, headers: tuple[str, ...], rows: list[list[str]]):
+        planner = TablePlanner(headers, rows)
+        table_map = planner.get_plan()
+
+        for header in headers:
+            # get padded border for each header
+            # get padded cell for each header
+
+        for row in rows:
+            # get padded border for each row
+            # get padded cell for each row
+
+
 
     def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):
         """Get formatted string for a choice line when using the choice method."""
