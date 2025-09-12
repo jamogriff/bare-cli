@@ -141,14 +141,14 @@ class BareCLI:
         table_map = planner.get_plan()
 
         border_line = [str(BorderBlock(n)) for n in table_map]
-        border_line = "".join(border_line) + "+"
+        border_line = "".join(border_line) + str(BorderBlock(1))
+        cell_row_end = str(CellBlock("", 1))
         header_line = [str(CellBlock(val, table_map[i], header=True)) for i, val in enumerate(headers)]
-        header_line = "".join(header_line) + "|"
-
+        header_line = "".join(header_line) + cell_row_end 
         row_lines: list[str] = []
         for row in rows:
             row_line = [str(CellBlock(val, table_map[i])) for i, val in enumerate(row)]
-            row_line = "".join(row_line) + "|"
+            row_line = "".join(row_line) + cell_row_end
             row_lines.append(row_line)
             row_lines.append(border_line)
 
