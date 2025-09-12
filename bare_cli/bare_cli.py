@@ -136,9 +136,9 @@ class BareCLI:
         # int_input will not be None here since it would not exit the loop
         return (int_input, choices[int_input])  # type: ignore[index, return-value]
 
-    def table(self, headers: tuple[str, ...], rows: list[list[str]]):
+    def table(self, headers: tuple[str, ...], rows: list[list[str]], *, comfortable_layout: bool = False):
         planner = TablePlanner(headers, rows)
-        table_map = planner.get_plan()
+        table_map = planner.get_plan(comfortable_layout=comfortable_layout)
 
         border_line = [str(BorderBlock(n)) for n in table_map]
         border_line = "".join(border_line) + str(BorderBlock(1))
