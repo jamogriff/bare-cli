@@ -7,6 +7,8 @@ from .blocks.status_block import StatusBlock
 from .blocks.nested_status_block import NestedStatusBlock
 from .blocks.choice_block import ChoiceBlock
 from .blocks.misc_block import MiscBlock
+from .blocks.border_block import BorderBlock
+from .blocks.cell_block import CellBlock
 from .invalid_choice_error import InvalidChoiceError
 from .color_mapper import ColorMapper
 from .table_planner import TablePlanner
@@ -138,14 +140,31 @@ class BareCLI:
         planner = TablePlanner(headers, rows)
         table_map = planner.get_plan()
 
-        for header in headers:
-            # get padded border for each header
-            # get padded cell for each header
+        border_line = [str(BorderBlock(n)) for n in table_map]
+        border_line = "".join(border_line) + "+"
+        header_line = [str(CellBlock(val, table_map[i], header=True)) for i, val in enumerate(headers)]
+        header_line = "".join(header_line) + "|"
 
+        row_lines: list[str] = []
         for row in rows:
-            # get padded border for each row
-            # get padded cell for each row
+            row_line = [str(CellBlock(val, table_map[i])) for i, val in enumerate(row)]
+            row_line = "".join(row_line) + "|"
+            row_lines.append(row_line)
+            row_lines.append(border_line)
 
+
+        # Now we print
+        parent_block = StatusBlock(Status.INFO, Fore.BLUE)
+        nested_block = NestedStatusBlock(parent_block)
+        print(f"{parent_block} {border_line}")
+        print(f"{nested_block} {header_line}")
+        print(f"{nested_block} {border_line}")
+
+        for i, line in enumerate(row_lines):
+            if i != len(row_lines) - 1:
+                print(f"{nested_block} {line}")
+            else:
+                print(f"{parent_block} {line}")
 
 
     def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):

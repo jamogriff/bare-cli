@@ -14,6 +14,8 @@ class TablePlanner:
                 if len(column) > column_lengths[i]:
                     column_lengths[i] = len(column)
 
-        return column_lengths
+        # Adding 3 to each length to accomodate for left cell
+        # character and two spaces surrounding value
+        return [n + 3 for n in column_lengths]
 
 

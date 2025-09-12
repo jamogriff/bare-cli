@@ -19,6 +19,15 @@ def demo():
     from bare_cli.enums import Color
 
     io.success("Optional modules imported")
+    color_rows = [
+        ["Red", "ERROR", "No"],
+        ["Green", "OK", "No"],
+        ["Blue", "INFO", "Yes"],
+        ["Cyan", "", "Yes"],
+        ["Magenta", "", "Yes"],
+        ["Yellow", "", "Yes"],
+    ]
+    io.table(("Color", "Status", "Accent Color"), color_rows)
 
     io = BareCLI(Color.CYAN)
     io.info(f"Set accent color to {Color.CYAN.value}")

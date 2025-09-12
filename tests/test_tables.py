@@ -14,8 +14,8 @@ class TestTables(unittest.TestCase):
         plan = planner.get_plan()
 
         self.assertEqual(len(plan), 4)
-        self.assertEqual(plan[0], 11)
-        self.assertEqual(plan[1], 5)
-        self.assertEqual(plan[2], 10)
-        self.assertEqual(plan[3], 13)
+        self.assertEqual(plan[0], 14)
+        self.assertEqual(plan[1], 8)
+        self.assertEqual(plan[2], 13)
+        self.assertEqual(plan[3], 16)
 
