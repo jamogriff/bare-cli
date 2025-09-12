@@ -164,7 +164,7 @@ class BareCLI:
 
         # Now we print
         parent_block = StatusBlock(Status.INFO, Fore.BLUE)
-        nested_block = NestedStatusBlock(parent_block)
+        nested_block = NestedStatusBlock(parent_block, no_fill=True)
         print(f"{parent_block} {border_line}")
         print(f"{nested_block} {header_line}")
         print(f"{nested_block} {border_line}")
@@ -194,13 +194,13 @@ class BareCLI:
 
     def _get_color_wheel(self) -> list[str]:
         return [
-            Fore.RESET,
+            Fore.CYAN,
+            Fore.BLUE,
+            Fore.GREEN,
             Fore.YELLOW,
             Fore.RED,
-            Fore.GREEN,
-            Fore.BLUE,
             Fore.MAGENTA,
-            Fore.CYAN,
+            Fore.RESET,
         ]
 
     def _try_parse_int(self, string_input: str) -> int | None:

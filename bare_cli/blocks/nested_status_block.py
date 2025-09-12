@@ -19,8 +19,9 @@ class NestedStatusBlock(AbstractBlock):
 
     CHILD_BLOCK_END = "| "
 
-    def __init__(self, parent: StatusBlock):
+    def __init__(self, parent: StatusBlock, *, no_fill: bool = False):
         self.parent_block_width = len(parent.raw)
+        self.no_fill = no_fill
 
     def __str__(self) -> str:
         return self.aligned
@@ -35,4 +36,10 @@ class NestedStatusBlock(AbstractBlock):
 
     @property
     def aligned(self) -> str:
-        return self._align("›", "<", self.SIDEBAR_WIDTH)
+        if self.no_fill:
+            char = ""
+        else:
+            char = "›"
+
+        return self._align(char, "<", self.SIDEBAR_WIDTH)
+
