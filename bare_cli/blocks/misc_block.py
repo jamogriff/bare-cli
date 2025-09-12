@@ -1,4 +1,5 @@
 from .abstract_block import AbstractBlock
+from colorama import Style
 
 
 class MiscBlock(AbstractBlock):
@@ -27,7 +28,7 @@ class MiscBlock(AbstractBlock):
 
     @property
     def colorized(self) -> str:
-        return self._get_bare_block(self.content, self.color)
+        return self._get_bare_block(self.content, self.color) + Style.RESET_ALL
 
     @property
     def aligned(self) -> str:
