@@ -27,7 +27,7 @@ def demo():
         ["Magenta", "", "Yes"],
         ["Yellow", "", "Yes"],
     ]
-    io.table(("Color", "Status", "Accent Color"), color_rows, comfortable_layout=True)
+    io.table(("Color", "Status", "Accent Color"), color_rows, comfortable_layout=False)
 
     io = BareCLI(Color.CYAN)
     io.info(f"Set accent color to {Color.CYAN.value}")
