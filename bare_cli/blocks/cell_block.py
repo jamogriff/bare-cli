@@ -15,7 +15,7 @@ class CellBlock(AbstractBlock):
 
     @property
     def raw(self) -> str:
-        return self.content
+        return self.block_start + self.content
 
     @property
     def colorized(self) -> str:
