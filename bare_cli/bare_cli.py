@@ -136,22 +136,31 @@ class BareCLI:
         # int_input will not be None here since it would not exit the loop
         return (int_input, choices[int_input])  # type: ignore[index, return-value]
 
-    def table(self, headers: tuple[str, ...], rows: list[list[str]], *, comfortable_layout: bool = False):
+    def table(
+        self,
+        headers: tuple[str, ...],
+        rows: list[list[str]],
+        *,
+        comfortable_layout: bool = False,
+    ):
         planner = TablePlanner(headers, rows)
         table_map = planner.get_plan(comfortable_layout=comfortable_layout)
 
-        border_line = [str(BorderBlock(n)) for n in table_map]
-        border_line = "".join(border_line) + str(BorderBlock(1))
+        border_lines = [str(BorderBlock(n)) for n in table_map]
+        border_line = "".join(border_lines) + str(BorderBlock(1))
         cell_row_end = str(CellBlock("", 1))
-        header_line = [str(CellBlock(val, table_map[i], header=True)) for i, val in enumerate(headers)]
-        header_line = "".join(header_line) + cell_row_end 
+        color_wheel = self._get_color_wheel()
+        header_lines = [
+            str(CellBlock(val, table_map[i], color_wheel[i % len(color_wheel)]))
+            for i, val in enumerate(headers)
+        ]
+        header_line = "".join(header_lines) + cell_row_end
         row_lines: list[str] = []
         for row in rows:
-            row_line = [str(CellBlock(val, table_map[i])) for i, val in enumerate(row)]
-            row_line = "".join(row_line) + cell_row_end
+            columns = [str(CellBlock(val, table_map[i])) for i, val in enumerate(row)]
+            row_line = "".join(columns) + cell_row_end
             row_lines.append(row_line)
             row_lines.append(border_line)
-
 
         # Now we print
         parent_block = StatusBlock(Status.INFO, Fore.BLUE)
@@ -166,19 +175,10 @@ class BareCLI:
             else:
                 print(f"{parent_block} {line}")
 
-
     def _get_choice_line(self, index: int, choice: str, parent_block: StatusBlock):
         """Get formatted string for a choice line when using the choice method."""
 
-        option_colors = [
-            Fore.RESET,
-            Fore.YELLOW,
-            Fore.RED,
-            Fore.GREEN,
-            Fore.BLUE,
-            Fore.MAGENTA,
-            Fore.CYAN,
-        ]
+        option_colors = self._get_color_wheel()
 
         choice_block = ChoiceBlock(index, option_colors[index % len(option_colors)])
         nested_block = NestedStatusBlock(parent_block)
@@ -191,6 +191,17 @@ class BareCLI:
 
         status_block = StatusBlock(status, colorama_fore_color)
         return f"{status_block} {message}"
+
+    def _get_color_wheel(self) -> list[str]:
+        return [
+            Fore.RESET,
+            Fore.YELLOW,
+            Fore.RED,
+            Fore.GREEN,
+            Fore.BLUE,
+            Fore.MAGENTA,
+            Fore.CYAN,
+        ]
 
     def _try_parse_int(self, string_input: str) -> int | None:
         """Attempt to parse user input ints for choice method."""

@@ -1,6 +1,7 @@
 import unittest
 from bare_cli.table_planner import TablePlanner
 
+
 class TestTables(unittest.TestCase):
 
     def test_default_table_planning(self):
@@ -18,7 +19,6 @@ class TestTables(unittest.TestCase):
         self.assertEqual(plan[1], 8)
         self.assertEqual(plan[2], 13)
         self.assertEqual(plan[3], 16)
-
 
     def test_comfortable_table_planning(self):
         headers = ("User", "Type", "Background", "Email")

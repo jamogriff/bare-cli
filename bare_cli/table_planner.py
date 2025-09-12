@@ -1,5 +1,6 @@
 import math
 
+
 class TablePlanner:
 
     COMFORTABLE_WIDTH = 80
@@ -22,15 +23,18 @@ class TablePlanner:
         # character and two spaces surrounding value
         minimum_column_lengths: list[int] = [n + 3 for n in column_lengths]
 
-        if not comfortable_layout or sum(minimum_column_lengths) >= self.COMFORTABLE_WIDTH:
+        if (
+            not comfortable_layout
+            or sum(minimum_column_lengths) >= self.COMFORTABLE_WIDTH
+        ):
             return minimum_column_lengths
         else:
             space_remaining = self.COMFORTABLE_WIDTH - sum(minimum_column_lengths)
             remainder = space_remaining % len(minimum_column_lengths)
             # Throw any remainder in last column
             minimum_column_lengths[len(minimum_column_lengths) - 1] += remainder
-            evenly_distributed_space = math.floor(space_remaining / len(minimum_column_lengths))
+            evenly_distributed_space = math.floor(
+                space_remaining / len(minimum_column_lengths)
+            )
 
             return [n + evenly_distributed_space for n in minimum_column_lengths]
-
-

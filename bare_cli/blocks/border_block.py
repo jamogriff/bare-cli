@@ -1,6 +1,7 @@
 from .abstract_block import AbstractBlock
 from colorama import Style
 
+
 class BorderBlock(AbstractBlock):
 
     def __init__(self, width: int):
@@ -22,4 +23,3 @@ class BorderBlock(AbstractBlock):
     @property
     def aligned(self) -> str:
         return self._align("-", "<", self.width)
-
